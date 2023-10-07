@@ -1,4 +1,5 @@
 #include "draw.h"
+#include "util.h"
 
 extern const TGAColor white ;
 extern const TGAColor red ;
@@ -121,3 +122,24 @@ void triangle0(Vec2i t0, Vec2i t1, Vec2i t2, TGAImage &image, TGAColor color) {
         } 
     } 
 }
+
+void triangleWithBarycentric(Vec2i *pts, TGAImage &image, TGAColor color) { 
+    Vec2i bboxmin(image.width()-1,  image.height()-1); 
+    Vec2i bboxmax(0, 0); 
+    Vec2i clamp(image.width()-1, image.height()-1); 
+    for (int i=0; i<3; i++) { 
+        bboxmin.x = std::max(0, std::min(bboxmin.x, pts[i].x));
+	bboxmin.y = std::max(0, std::min(bboxmin.y, pts[i].y));
+
+	bboxmax.x = std::min(clamp.x, std::max(bboxmax.x, pts[i].x));
+	bboxmax.y = std::min(clamp.y, std::max(bboxmax.y, pts[i].y));
+    } 
+    Vec2i P; 
+    for (P.x=bboxmin.x; P.x<=bboxmax.x; P.x++) { 
+        for (P.y=bboxmin.y; P.y<=bboxmax.y; P.y++) { 
+            vec3 bc_screen  = barycentric(pts, P); 
+            if (bc_screen.x<0 || bc_screen.y<0 || bc_screen.z<0) continue; 
+            image.set(P.x, P.y, color); 
+        } 
+    } 
+} 

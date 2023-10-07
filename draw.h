@@ -12,3 +12,5 @@ void triangleline1(Vec2i t0,Vec2i t1,Vec2i t2,TGAImage&image,TGAColor color);
 
 void triangle0(Vec2i t0, Vec2i t1, Vec2i t2, TGAImage &image, TGAColor color);
 
+void triangleWithBarycentric(Vec2i *pts, TGAImage &image, TGAColor color);
+
