@@ -6,6 +6,8 @@ extern const TGAColor white = TGAColor(255, 255, 255, 255);
 extern const TGAColor red = TGAColor(255, 0, 0, 255);
 extern const TGAColor green = TGAColor(0, 255, 0, 255);
 
+vec3 light_dir(0,0,-1); // define light_dir
+
 const int width = 800;
 const int height = 800;
 
@@ -44,15 +46,21 @@ int main(int argc, char **argv)
     for (int i = 0; i < pModel->nfaces(); i++)
     {
         Vec2i screen_coords[3];
+        vec3 world_coords[3]; 
         for (int j = 0; j < 3; j++)
         {
             vec3 v0 = pModel->vert(i, j);
             int x0 = (v0.x + 1.) * width / 2.;
             int y0 = (v0.y + 1.) * height / 2.;
             screen_coords[j] = Vec2i(x0, y0);
+            world_coords[j] = v0;
         }
 
-        triangleWithBarycentric(screen_coords, image, TGAColor(rand() % 255, rand() % 255, rand() % 255, 255));
+        vec3 n = (world_coords[2]-world_coords[0])^(world_coords[1]-world_coords[0]); 
+        n.normalize(); 
+        float intensity = n*light_dir; 
+        if (intensity>0) 
+            triangleWithBarycentric(screen_coords, image, TGAColor(intensity*255, intensity*255, intensity*255, 255));
     }
 
     image.flip_vertically(); // i want to have the origin at the left bottom corner of the image
