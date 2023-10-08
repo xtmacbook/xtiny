@@ -104,7 +104,7 @@ typedef Vec3<float> vec3;
 
 template<class T> Vec3<T> cross(const Vec3<T> &v1, const Vec3<T> &v2)
 {
-    return vec<3>{v1.y*v2.z - v1.z*v2.y, v1.z*v2.x - v1.x*v2.z, v1.x*v2.y - v1.y*v2.x};
+    return Vec3<T>{v1.y*v2.z - v1.z*v2.y, v1.z*v2.x - v1.x*v2.z, v1.x*v2.y - v1.y*v2.x};
 }
 
 template<int n> struct dt;
@@ -265,7 +265,9 @@ template <class t> struct Vec2 {
 	inline Vec2<t> operator -(const Vec2<t> &V) const { return Vec2<t>(u-V.u, v-V.v); }
 	inline Vec2<t> operator *(float f)          const { return Vec2<t>(u*f, v*f); }
     inline t operator[](int index) const {return raw[index];}
+    inline t& operator[](int index) {return raw[index];}
 	template <class > friend std::ostream& operator<<(std::ostream& s, Vec2<t>& v);
 };
 
 using Vec2i = Vec2<int>;
+using Vec2f = Vec2<float>;
